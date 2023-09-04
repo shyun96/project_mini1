@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            display: flex;
+            font-family: 'Nanum Gothic', sans-serif;
+            flex-direction: column;
+        }
+        h1 {
+            display: flex;
+            justify-content: center;
+            width: 500px;
+            margin-bottom: 5px;
+        }
+        .detailContent {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        ul {
+            font-size: 15px;
+            justify-content: flex-end;
+            width: 500px;
+            display: flex;
+            list-style-type: none;
+            padding: 0;
+            border-bottom: 1px solid #d9d9d9;
+            border-top: 1px solid #d9d9d9;
+            padding: 5px;
+        }
+        li {
+            margin-left: 5px;
+        }
+        img {
+            width: 500px;
+            margin-bottom: 20px;
+        }
+        .detail {
+            width: 500px;
+            word-break: break-all;
+            margin-bottom: 20px;
+        }
+        .cmt_cnt {
+            width: 500px;
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: 10px;
+        }
+        form {
+            width: 500px;
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: 20px;
+        }
+        .cmt {
+            border-bottom: 1px solid #d9d9d9;
+            padding-bottom: 10px;
+            word-break: break-all;
+            width: 500px;
+            margin-top: 10px;
+        }
+        textarea {
+            width: 400px;
+            border-radius: 10px;
+            resize: none;
+            text-align: left;
+            padding: 10px;
+        }
+        .topbar {
+            display: flex;
+            justify-content: flex-end;
+        }
+        button {
+            border-radius: 10px;
+            padding: 10px 20px;
+            border: none;
+            background-color: #3498db;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease; 
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        button:hover {
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+        button:active {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        .main_lst {
+            margin-top: 10px;
+        }
+        .cmt_nick {
+            margin-bottom: 5px;
+            color: #3498db;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class = "topbar">
+        <button>
+            로그인
+        </button>
+    </div>
+    <div class = "detailContent">
+        <h1>
+            {{data}}
+        </h1>
+        <ul>
+            <li>
+                {{data.usrname}}
+            </li>
+            <li>
+                {{data.view}}
+            </li>
+            <li>
+                {{data.cmt}}
+            </li>
+            <li>
+                등록날짜
+            </li>
+        </ul>
+        <img src="{{ data.img }}" alt="bonobono">
+        <div class = "detail">
+            dddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
+            dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
+            ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
+        </div>
+        <div class = "cmt_cnt">
+            댓글 30개
+        </div>
+        <div>
+            <form action="/" method = "post">
+                <textarea name = "content"></textarea>
+                <button>
+                    댓글 달기
+                </button>
+            </form>
+            <div class = "cmt">
+                <div class = "cmt_nick">
+                    닉네임
+                </div>
+                <div>
+                    댓글
+                </div>
+             
+            </div>
+            <div class = "cmt">
+                닉네임 : ㅇㄹㅇㄹㅇㄹㅇㄹ
+            </div>
+            <div class = "cmt">
+                닉네임 : ㅇㄹㅇㄹㅇㄹㅇㄹ
+            </div>
+            <form action=" " method="POST">
+                <button class = "main_lst">
+                    목록
+                </button>
+            </form>
+        </div>
+    </div>
+    
+</body>
+</html>

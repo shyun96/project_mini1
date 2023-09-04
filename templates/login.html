@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .bigcontainer {
+            width: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .Input_act {
+            display: flex;
+            flex-direction: column;
+        }
+     
+    </style>
+</head>
+<body>
+    <div class = "bigcontainer">
+        <div class = "LoginLabel">
+            <h1>
+                LOG IN
+            </h1>
+        </div>
+        <div class = "Input_act">
+            <input type="text" placeholder="Email" name="userName" required>
+            <input type="password" placeholder="Password" name="userPassword" required>
+        </div>
+        <div class = "Btns">
+            <form action="/">
+                <button>로그인</button>
+            </form>
+            <form action="/signup">
+                <button>회원가입</button>
+            </form>
+            
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+
+
+<!-- <body>
+    <div class="login-wrapper">
+        <h2>Login</h2>
+        <form method="get" action="/applydata" id="login-form">
+            <input type="text" placeholder="Email" name="userName" required>
+            <input type="password" placeholder="Password" name="userPassword" required>
+            <label for="remember-check">
+                <input type="checkbox" id="remember-check">아이디 저장하기
+            </label>
+            <input type="submit" value="Login">
+        </form>
+    </div>
+</body> -->

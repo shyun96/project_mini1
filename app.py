@@ -6,6 +6,7 @@ app = Flask(__name__, static_folder='./resources/')
 
 @app.route('/', methods = ["GET", "POST"])
 def index():
+    board_data_lst = []
     dic = {
         'img' : '/resources/aaa.jpg',
         'topic' : '보노보노 미침',
@@ -36,7 +37,19 @@ def index():
             return render_template("index.html", data_lst = sorted_data_lst)
             
     else:
-        return render_template("index.html",data_lst=data_lst)
+        board_data = database.get_board_data()
+        for data in board_data:
+            data_dic = {
+                'id' : data[0],
+                'image' : data[1],
+                'create_time' : data[2],
+                'content' : data[3],
+                'views' : data[4],
+                'user_id' : data[5]
+            }
+            board_data_lst.append(data_dic)
+        #print(board_data_lst)
+        return render_template("index.html",data_lst=board_data_lst)
 
 
 @app.route('/login')
@@ -50,7 +63,7 @@ def create_BB():
 @app.route('/detail/<aa>',methods = ["GET"])
 def detail(aa):
     #data = request.args.get('data')
-    print(aa)
+    #print(aa)
     return render_template('detail.html',data=aa)
 
 @app.route('/signup')

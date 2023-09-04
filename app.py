@@ -17,7 +17,8 @@ def index():
             'create_time' : data[2],
             'content' : data[3],
             'views' : data[4],
-            'user_id' : data[5]
+            'title' : data[5],
+            'user_id' : data[6]
         }
         board_data_lst.append(data_dic)
     

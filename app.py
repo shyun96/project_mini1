@@ -1,70 +1,64 @@
-from flask import Flask, render_template,request,redirect,url_for
+from flask import Flask, render_template,request,redirect,url_for,session,flash
 import sys
 import database
 
 app = Flask(__name__, static_folder='./resources/')
+app.secret_key = 'secretkey'
 
 @app.route('/', methods = ["GET", "POST"])
 def index():
+    print(session['id'])
     board_data_lst = []
-    dic = {
-        'img' : '/resources/aaa.jpg',
-        'topic' : '보노보노 미침',
-        'view' : 30,
-        'cmt' : 75,
-        'usrname' : '냉철한해물칼국수'
-    }
-    dic2 = {
-        'img' : '/resources/ddddd.jpg',
-        'topic' : '보노보노',
-        'view' : 40,
-        'cmt' : 40,
-        'usrname' : '냉철한박광민칼국수'
-    }
-    
-    data_lst = []
-    data_lst.append(dic)
-    data_lst.append(dic2)
+    board_data = database.get_board_data()
+    for data in board_data:
+        data_dic = {
+            'id' : data[0],
+            'image' : data[1],
+            'create_time' : data[2],
+            'content' : data[3],
+            'views' : data[4],
+            'user_id' : data[5]
+        }
+        board_data_lst.append(data_dic)
     
     if request.method == "POST":
         sorting_option = request.form['sorting_option']
-        #print(sorting_option)
+        
         if sorting_option == "최신순":
-            return render_template("index.html", data_lst = data_lst)
+            sorted_time_data_lst = sorted(board_data_lst, key=lambda x: x['create_time'])
+            return render_template("index.html", data_lst = sorted_time_data_lst)
+        
         else:
-            sorted_data_lst = sorted(data_lst, key=lambda x: x['view'], reverse=True)
-            #sorted_data_lst = sorted(data_lst.items(),key = lambda x:x[2],reverse = True)
-            return render_template("index.html", data_lst = sorted_data_lst)
+            sorted_views_data_lst = sorted(board_data_lst, key=lambda x: x['views'], reverse=True)
+            return render_template("index.html", data_lst = sorted_views_data_lst)
             
     else:
-        board_data = database.get_board_data()
-        for data in board_data:
-            data_dic = {
-                'id' : data[0],
-                'image' : data[1],
-                'create_time' : data[2],
-                'content' : data[3],
-                'views' : data[4],
-                'user_id' : data[5]
-            }
-            board_data_lst.append(data_dic)
-        #print(board_data_lst)
         return render_template("index.html",data_lst=board_data_lst)
 
 
-@app.route('/login')
+@app.route('/login', methods = ["GET", "POST"])
 def login():
-    return render_template("login.html")
+    if request.method == 'GET':
+        return render_template("login.html")
+    else:
+        id_ = request.form['id']
+        pwd = request.form['password']
+
+        isid = database.id_check(id_, pwd)
+        if(isid) :
+            session['id'] = id_
+            return redirect(url_for('index'))
+        else:
+            flash("로그인 정보가 없습니다. 재로그인 해주세요. ")
+            return redirect(url_for('login'))
 
 @app.route('/create')
 def create_BB():
     return render_template('create.html')
 
-@app.route('/detail/<aa>',methods = ["GET"])
-def detail(aa):
-    #data = request.args.get('data')
-    #print(aa)
-    return render_template('detail.html',data=aa)
+@app.route('/detail/<id>',methods = ["GET"])
+def detail(id):
+    return render_template('detail.html',data=id)
 
 @app.route('/signup')
 def signup():
@@ -72,7 +66,6 @@ def signup():
 
 # @app.route('/applydata')
 # def signup():
-    
 #     Name = request.args.get("NaMe")
 #     username = request.args.get("userName")
 #     password = request.args.get("userPassword")

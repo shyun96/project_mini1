@@ -109,7 +109,7 @@
     <div class = "ulparent">
         <ul>
             {% for obj in data_lst%}
-            <a href="{{url_for('detail', aa = obj.id)}}">
+            <a href="{{url_for('detail', id = obj.id)}}">
                 <li>
                     <img src= "{{ obj.image }}" alt="bonobono"/>
                     <span class = "imgName">{{obj.topic}}</span>

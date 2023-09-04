@@ -35,20 +35,26 @@
                 LOG IN
             </h1>
         </div>
-        <div class = "Input_act">
-            <input type="text" placeholder="Email" name="userName" required>
-            <input type="password" placeholder="Password" name="userPassword" required>
-        </div>
-        <div class = "Btns">
-            <form action="/">
+        <form action="/login" method="post">
+            <div class = "Input_act">
+                <input type="text" placeholder="Email" name="id" required>
+                <input type="password" placeholder="Password" name="password" required>
+            </div>
+            <div class = "Btns">
                 <button>로그인</button>
-            </form>
-            <form action="/signup">
                 <button>회원가입</button>
-            </form>
+        </form>
             
         </div>
     </div>
+    {%with messages = get_flashed_messages()%}
+    {%if messages %}
+      <script type="text/javascript">
+        alert("{{messages[-1]}}");
+      </script>
+      {%endif%}
+    {%endwith%}
+
 </body>
 </html>
 

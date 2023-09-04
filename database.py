@@ -23,6 +23,19 @@ def create_db(username,Name,TelePhone,password):
     except Exception as e:
         print(e)
 
+def id_check(user_id, pwd):
+    try:
+        with connect(**connectionString) as con:
+            cursor = con.cursor()
+            sql = "SELECT * FROM user " + "where id = %s and password = %s;"
+            cursor.execute(sql, [user_id, pwd])
+            result = cursor.fetchall()
+            print(result)
+            return result
+    except Exception as e:
+        print(e)
+
+
 #GET요청
 def get_board_data():
     try:
@@ -31,7 +44,7 @@ def get_board_data():
             sql = "select * from shop.board"
             cursor.execute(sql)
             board_data = cursor.fetchall()
-            print(board_data)
+            #print(board_data)
             #cursor.close()
             #con.close()
             

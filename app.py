@@ -49,10 +49,13 @@ def login():
         isid = database.id_check(id_, pwd)
         if(isid) :
             session['id'] = id_
-            return redirect(url_for('index'))
+            return redirect(url_for('index',id_info = id_))
         else:
             flash("로그인 정보가 없습니다. 재로그인 해주세요. ")
             return redirect(url_for('login'))
+
+
+    #return id_info
 
 @app.route('/create')
 def create_BB():

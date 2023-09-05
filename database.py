@@ -41,10 +41,11 @@ def get_board_data():
     try:
         with connect(**connectionString) as con:
             cursor = con.cursor()
-            sql = "select * from shop.board"
+            #sql = "select * from shop.board"
+            sql = "select id, image, created_time, content, views, title, user_id, (select count(*) from shop.reply as sr where sr.board_id = sb.id) as cmt from shop.board as sb;"
             cursor.execute(sql)
             board_data = cursor.fetchall()
-            #print(board_data)
+            print(board_data)
             #cursor.close()
             #con.close()
             

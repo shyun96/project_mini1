@@ -7,7 +7,7 @@ app.secret_key = 'secretkey'
 
 @app.route('/', methods = ["GET", "POST"])
 def index():
-    print(session['id'])
+    #print(session['id'])
     board_data_lst = []
     board_data = database.get_board_data()
     for data in board_data:
@@ -18,7 +18,8 @@ def index():
             'content' : data[3],
             'views' : data[4],
             'title' : data[5],
-            'user_id' : data[6]
+            'user_id' : data[6],
+            'comment_cnt' : data[7]
         }
         board_data_lst.append(data_dic)
     
@@ -81,7 +82,6 @@ def signup():
 #     if request.method == 'POST':
 #         return render_template('index.html')
 #     return redirect(url_for(''))
-
 
 
 if __name__ == '__main__':

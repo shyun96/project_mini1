@@ -36,6 +36,29 @@ def id_check(user_id, pwd):
     except Exception as e:
         print(e)
 
+def signup(id, password, name, phone):
+    try:
+        with connect(**connectionString) as con:
+            cursor = con.cursor()
+            sql = f"""INSERT INTO user (id,password, name,phone) VALUES("{id}","{password}","{name}","{phone}")"""
+            print(cursor.execute(sql))
+            con.commit()
+            
+    except Exception as e:
+        print(e)
+        
+def checkid_duplicate(id):
+    try:
+        with connect(**connectionString) as con:
+            cursor = con.cursor()
+            sql = "SELECT * FROM user " + "where id = %s;"
+            cursor.execute(sql, [id])
+            result = cursor.fetchall()
+            print(result)
+            return result
+            
+    except Exception as e:
+        print(e)
 
 #GET요청
 def get_main_data():
@@ -68,5 +91,15 @@ def get_detail_data(id):
     except Exception as e:
         print(e)
 
-    
+def count_view(board_id):
+    try:
+        with connect(**connectionString) as con:
+            cursor = con.cursor()
+            sql = f"UPDATE shop.board SET views = views + 1 WHERE id = {board_id};"
+            cursor.execute(sql)
+            con.commit()
+            
+    except Exception as e:
+        print(e)
+        
     

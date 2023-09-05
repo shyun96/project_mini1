@@ -73,12 +73,10 @@ def logout():
 def create_BB():
     return render_template('create.html')
 
-@app.route('/detail/<id>',methods = ["GET"])
+@app.route('/detail/<id>',methods = ["POST","GET"])
 def detail(id):
+    database.count_view(id)
     detail_data = database.get_detail_data(id)
-    print('---------------------------------------')
-    print(detail_data)
-    print('--------------------------------------')
     detail_data_dic = {
         'id' : detail_data[0],
         'image' : detail_data[1],
@@ -89,29 +87,29 @@ def detail(id):
         'user_id' : detail_data[6],
         'comment_cnt' : detail_data[7]
     }
-    print(detail_data_dic)
+    #print(detail_data_dic)
     return render_template('detail.html',data=detail_data_dic)
 
-@app.route('/signup')
+@app.route('/signup', methods = ["GET", "POST"])
 def signup():
-    return render_template('signup.html')
+    if request.method == 'GET':
+        return render_template("signup.html")
+    else:
+        id_ = request.form['id']
+        pwd = request.form['password']
+        name_ = request.form['name']
+        phone_ = request.form['phone']
+        
+        isid = database.checkid_duplicate(id_)
+        if(isid) :
+            flash("중복된 아이디 입니다. ")
+            return redirect(url_for('signup'))
+        else:
+            database.signup(id_, pwd, name_, phone_)
+            flash("회원가입 되셨습니다. ")
+            session['id'] = id_
+            return redirect(url_for('index'))
 
-# @app.route('/applydata')
-# def signup():
-#     Name = request.args.get("NaMe")
-#     username = request.args.get("userName")
-#     password = request.args.get("userPassword")
-#     TelePhone = request.args.get("TelePhone")
-#     database.save(username,Name,TelePhone,password)
-#     #print(user1)
-#     #return user1
-#     return render_template("m.html")
-
-# @app.route('/dd',methods=['POST'])
-# def main():
-#     if request.method == 'POST':
-#         return render_template('index.html')
-#     return redirect(url_for(''))
 
 
 if __name__ == '__main__':

@@ -59,9 +59,10 @@ def get_detail_data(id):
     try:
         with connect(**connectionString) as con:
             cursor = con.cursor()
-            sql = ""
+            sql = f"select id, image, created_time, content, views, title, user_id, (select count(*) from shop.reply as sr where sr.board_id = sb.id) as cmt from shop.board as sb where sb.id = {id};"
             cursor.execute(sql)
-            detail_data = cursor.fetchall()
+            detail_data = cursor.fetchone()
+            #print(detail_data)
         return detail_data
     
     except Exception as e:

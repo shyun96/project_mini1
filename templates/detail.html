@@ -111,30 +111,28 @@
     </div>
     <div class = "detailContent">
         <h1>
-            {{data}}
+            {{data.title}}
         </h1>
         <ul>
             <li>
-                {{name}}
+                {{data.user_id}}
             </li>
             <li>
-                {{view}}
+                {{data.views}}
             </li>
             <li>
-                {{cmt}}
+                {{data.comment_cnt}}
             </li>
             <li>
-                등록날짜
+                {{data.create_time}}
             </li>
         </ul>
-        <img src="{{ data.img }}" alt="bonobono">
+        <img src="{{ data.image }}" alt="bonobono">
         <div class = "detail">
-            dddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
-            dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
-            ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
+            {{data.content}}
         </div>
         <div class = "cmt_cnt">
-            댓글 30개
+            댓글 {{data.comment_cnt}}개
         </div>
         <div>
             <form action="/" method = "post">

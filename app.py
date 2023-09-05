@@ -9,7 +9,7 @@ app.secret_key = 'secretkey'
 def index():
     #print(session['id'])
     board_data_lst = []
-    board_data = database.get_board_data()
+    board_data = database.get_main_data()
     for data in board_data:
         data_dic = {
             'id' : data[0],
@@ -75,7 +75,22 @@ def create_BB():
 
 @app.route('/detail/<id>',methods = ["GET"])
 def detail(id):
-    return render_template('detail.html',data=id)
+    detail_data = database.get_detail_data(id)
+    print('---------------------------------------')
+    print(detail_data)
+    print('--------------------------------------')
+    detail_data_dic = {
+        'id' : detail_data[0],
+        'image' : detail_data[1],
+        'create_time' : detail_data[2],
+        'content' : detail_data[3],
+        'views' : detail_data[4],
+        'title' : detail_data[5],
+        'user_id' : detail_data[6],
+        'comment_cnt' : detail_data[7]
+    }
+    print(detail_data_dic)
+    return render_template('detail.html',data=detail_data_dic)
 
 @app.route('/signup')
 def signup():

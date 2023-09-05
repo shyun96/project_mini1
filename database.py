@@ -22,7 +22,8 @@ def create_db(username,Name,TelePhone,password):
             
     except Exception as e:
         print(e)
-
+        
+#로그인 체크
 def id_check(user_id, pwd):
     try:
         with connect(**connectionString) as con:
@@ -37,7 +38,7 @@ def id_check(user_id, pwd):
 
 
 #GET요청
-def get_board_data():
+def get_main_data():
     try:
         with connect(**connectionString) as con:
             cursor = con.cursor()
@@ -45,12 +46,24 @@ def get_board_data():
             sql = "select id, image, created_time, content, views, title, user_id, (select count(*) from shop.reply as sr where sr.board_id = sb.id) as cmt from shop.board as sb;"
             cursor.execute(sql)
             board_data = cursor.fetchall()
-            print(board_data)
+            #print(board_data)
             #cursor.close()
             #con.close()
             
         return board_data
             
+    except Exception as e:
+        print(e)
+        
+def get_detail_data(id):
+    try:
+        with connect(**connectionString) as con:
+            cursor = con.cursor()
+            sql = ""
+            cursor.execute(sql)
+            detail_data = cursor.fetchall()
+        return detail_data
+    
     except Exception as e:
         print(e)
 

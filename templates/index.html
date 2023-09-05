@@ -20,20 +20,21 @@
             color: white;
             text-align: center;
             padding: 20px 0;
-            margin-left: 150px;
-            margin-right: 150px;
+            margin-left: 130px;
+            margin-right: 130px;
         }
         header h1 {
             margin: 0;
+            font-size: 32px;
         }
         .topbar {
             display: flex;
             justify-content: flex-end;
-            margin-right: 150px;
+            margin-right: 130px;
         }
         .secondArea {
             display: flex;
-            margin-left: 150px;
+            margin-left: 130px;
         }
 
         .selectBtn button{
@@ -53,13 +54,13 @@
         .ulparent {
             display: flex;
             justify-content: center;
+            
         }
         ul{
-            width: 1350px;
             display: flex;
             justify-content: flex-start;
             flex-wrap: wrap;
-            
+            margin-left: 75px
         }
         li {
             flex: 0 0 calc(33.3333% - 20px); /* 3개의 열로 나눔 (수정: 여백 제거) */
@@ -70,6 +71,9 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s, box-shadow 0.3s;
             list-style-type: none;
+            max-width: 300px;
+            max-height: 100%;
+            
         }
         li:hover {
             transform: scale(1.05);

@@ -5,17 +5,17 @@
 </head>
 <body>
     
-    <h1>{{ user_id }}님의 마이페이지</h1>
+    <h1>{{ id }}님의 마이페이지</h1>
     
     
         <!-- 현재 로그인한 사용자가 작성한 글 목록을 렌더링 -->
     <ul>
            
-        {% for post_title in user_posts %}
+        {% for title in titles %}
             <li>
-                {{ post_title }}
-                <a href="{{ url_for('edit_post', user_id=user_id, post_title=post_title) }}">수정</a>
-            </li>
+                {{ title }}
+                <a href="{{ url_for('edit', id=id, title=title) }}">수정</a>
+            </li> 
         {% endfor %}
            
     </ul>

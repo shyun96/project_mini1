@@ -93,18 +93,19 @@ def get_detail_data(id):
         print(e)
 
 
-def create_board(title,content):
-    print("here")
-    print(title,content)
+def post_board_data(user_id,title,content,filename):
+    #print("here")
+    #print(title,content)
     try:
         with connect(**connectionString) as con:
             cursor = con.cursor()
-            sql = f"""INSERT INTO board (image,created_time,content,views,title,user_id) VALUES("{title}","{content}")"""
-            print(cursor.execute(sql))
+            sql = f"""INSERT INTO shop.board (image,created_time,content,views,title,user_id) VALUES("{filename}",now(),"{content}",0,"{title}","{user_id}")"""
+            cursor.execute(sql)
             con.commit()
             
     except Exception as e:
         print(e)
+
         
 def comments(user_id, comment, board):
     try:
@@ -139,5 +140,67 @@ def count_view(board_id):
             
     except Exception as e:
         print(e)
+
+# mypage
+def get_mypage(id):
+    try:
+        with connect(**connectionString) as con:
+            cursor = con.cursor()
+            sql = "SELECT title FROM shop.board WHERE user_id = %s;"
+            cursor.execute(sql, [id])
+            posts = cursor.fetchall()
+            
+            post_titles = [post[0] for post in posts]
+            
+            return post_titles
+    
+    except Exception as e:
+        print(e)
+ 
+ 
+# edit
+def get_edit(title):
+    try:
+        with connect(**connectionString) as con:
+            cursor = con.cursor()
+            sql = "SELECT id, created_time, content, title FROM shop.board WHERE title = %s;"
+            cursor.execute(sql, [title])
+            edit_data = cursor.fetchone()
         
+            return edit_data
+        print(title)
+    except Exception as e:
+        print(e)
+       
+
+
+# edit
+# def get_post(user_id, post_title):
+#     try:
+#         with mysql.connector.connect(**connectionString) as con:
+#             cursor = con.cursor()
+#             sql = "SELECT * FROM shop.board WHERE user_id = %s AND title = %s;"
+        
+#             post_data = cursor.execute(sql, (user_id, post_title))
+#             post_data = cursor.fetchone()
+#             cursor.commit()
+            
+
+#             if post_data:
+#                 post = {
+#                     'id': post_data[0],
+#                     'image': post_data[1],
+#                     'create_time': post_data[2],
+#                     'content': post_data[3],
+#                     'views': post_data[4],
+#                     'title': post_data[5],
+#                     'user_id': post_data[6],
+#                     'comment_cnt': post_data[7],
+#                 }
+#                 return post               
+#             else:
+#                 return None
+    
+#     except Exception as e:
+#         print(e)
     

@@ -1,9 +1,14 @@
 from flask import Flask, render_template,request,redirect,url_for,session,flash
 import sys
-import database
+import database, img_resize
+from os import path
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__, static_folder='./resources/')
 app.secret_key = 'secretkey'
+UPLOAD_FOLDER = path.join('.', 'resources/')
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
 
 @app.route('/', methods = ["GET", "POST"])
 def index():
@@ -27,7 +32,7 @@ def index():
         sorting_option = request.form['sorting_option']
     
         if sorting_option == "최신순":
-            sorted_time_data_lst = sorted(board_data_lst, key=lambda x: x['create_time'])
+            sorted_time_data_lst = sorted(board_data_lst, key=lambda x: x['create_time'], reverse=True)
             if 'id' in session:
                 return render_template("index.html", data_lst = sorted_time_data_lst, id = session['id'])
             else:
@@ -40,10 +45,11 @@ def index():
                 return render_template("index.html", data_lst = sorted_views_data_lst)
         
     else:
+        sorted_time_data_lst = sorted(board_data_lst, key=lambda x: x['create_time'], reverse=True)
         if 'id' in session:
-            return render_template("index.html",data_lst=board_data_lst, id = session['id'])
+            return render_template("index.html",data_lst=sorted_time_data_lst, id = session['id'])
         else: 
-            return render_template("index.html",data_lst=board_data_lst)
+            return render_template("index.html",data_lst=sorted_time_data_lst)
 
 
 @app.route('/login', methods = ["GET", "POST"])
@@ -74,13 +80,19 @@ def create_board_data():
     if request.method == 'POST':
         title = request.form['title']
         content = request.form['content']
+        img_file = request.files['image']
         print('------------------------')
-        print(title,content)
+        print(title,content,img_file)
+        print(img_file.filename)
         print('------------------------')
-        #new_post = Post(title=title, content=content)
-        database.create_board(title, content) 
-        #print(title,content)   
-        return render_template('index.html')  
+        #https://stackoverflow.com/questions/58720113/flask-resfull-app-permission-error-on-file-save 참조
+        img_file.save(path.join(app.config['UPLOAD_FOLDER'], secure_filename(img_file.filename)))
+        ImgFile = '/resources/' + img_file.filename
+        img_resize.img_resize('.'+ ImgFile)
+        #ImgFile = '/resources/' + img_file.filename
+        database.post_board_data(session['id'],title,content,ImgFile)
+        #database.post_board_data(sess,title,content,img_file.filename)
+        return redirect(url_for('index'))
     else:
         return render_template('create.html')
 
@@ -142,7 +154,74 @@ def signup():
             session['id'] = id_
             return redirect(url_for('index'))
 
+# mypage
+@app.route('/mypage')
+def mypage():
+    # 로그인 상태 확인
+    id = session.get('id')
 
+    # 사용자가 작성한 글 목록 가져오기 (제목만)
+    titles = database.get_mypage(id) 
+    
+    return render_template('mypage.html', id=id, titles=titles)
+
+
+# edit
+@app.route('/edit/<string:title>', methods=["POST", "GET"])
+def edit(title):
+    
+    # if request.method == "GET":
+    #     database.count_view(title)
+    #     edit_data = database.get_edit(title)
+    #     edit_data_dic = {
+    #         'id': edit_data[0],
+    #         'create_time': edit_data[1],
+    #         'content': edit_data[2],
+           
+    #     }
+    #     return render_template('edit.html', data=edit_data_dic)
+    
+    request.method == "GET"
+        
+    database.count_view(title)
+    edit_data = database.get_edit(title)
+    edit_data_dic = {
+
+        'id': edit_data[0],
+        'create_time': edit_data[1],
+        'content': edit_data[2],
+        'title' : edit_data[3]
+        
+        }
+    return render_template('edit.html', data=edit_data_dic)
+    
+    # else:
+    #     content = request.form['content']
+    #     print("-----------")
+    #     print(content)
+    #     print("------------------")
+    #     id = session['id']  # 현재 로그인한 사용자의 ID 가져오기
+    #     database.comments(id, content)
+    #     return redirect(url_for("edit", title=title))
+
+
+
+
+# edit
+# @app.route('/edit_post/<user_id>/<post_title>', methods=['GET', 'POST'])
+# def edit_post(user_id, post_title):
+
+#     try:
+#         return  database.get_post(user_id, post_title) 
+    
+   
+        
+   
+#         post = database.get_post(user_id, post_title)
+#     except Exception as e:
+#         print(e)
+    
+#     return render_template('edit_post.html', post=post)
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -36,7 +36,7 @@ def index():
             sorted_views_data_lst = sorted(board_data_lst, key=lambda x: x['views'], reverse=True)
             if 'id' in session:
                 return render_template("index.html", data_lst = sorted_views_data_lst, id = session['id'])
-            else:    
+            else:
                 return render_template("index.html", data_lst = sorted_views_data_lst)
         
     else:
@@ -69,26 +69,48 @@ def logout():
     return redirect(url_for('index'))
     #return id_info
 
-@app.route('/create')
-def create_BB():
-    return render_template('create.html')
+@app.route('/create', methods=['POST','GET'])
+def create_board_data():
+    if request.method == 'POST':
+        title = request.form['title']
+        content = request.form['content']
+        print('------------------------')
+        print(title,content)
+        print('------------------------')
+        #new_post = Post(title=title, content=content)
+        database.create_board(title, content) 
+        #print(title,content)   
+        return render_template('index.html')  
+    else:
+        return render_template('create.html')
 
 @app.route('/detail/<id>',methods = ["POST","GET"])
 def detail(id):
-    database.count_view(id)
-    detail_data = database.get_detail_data(id)
-    detail_data_dic = {
-        'id' : detail_data[0],
-        'image' : detail_data[1],
-        'create_time' : detail_data[2],
-        'content' : detail_data[3],
-        'views' : detail_data[4],
-        'title' : detail_data[5],
-        'user_id' : detail_data[6],
-        'comment_cnt' : detail_data[7]
-    }
-    #print(detail_data_dic)
-    return render_template('detail.html',data=detail_data_dic)
+    #print(333333333333333333333)
+    if request.method == "GET":
+        database.count_view(id)
+        detail_data = database.get_detail_data(id)
+        detail_data_dic = {
+            'id' : detail_data[0],
+            'image' : detail_data[1],
+            'create_time' : detail_data[2],
+            'content' : detail_data[3],
+            'views' : detail_data[4],
+            'title' : detail_data[5],
+            'user_id' : detail_data[6],
+            'comment_cnt' : detail_data[7]
+            }
+        return render_template('detail.html',data=detail_data_dic)
+    else :
+        content = request.form['content']
+        print("-----------")
+        print(content)
+        print("------------------")
+        user_id = session['id'] # 현재 로그인한 사용자의 ID 가져오기
+        database.comments(user_id, content)
+        return redirect(url_for("detail",id=id))
+        #print(detail_data_dic)
+
 
 @app.route('/signup', methods = ["GET", "POST"])
 def signup():

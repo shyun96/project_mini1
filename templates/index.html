@@ -135,10 +135,9 @@
     </header>
     <div class = "topbar">
         {% if session.get('id') %}
-            <form action="/logout">
-                <button>
-                    로그아웃
-                </button>
+            <form>
+                <input type="submit" value="로그아웃" formaction = "/logout"/>
+                <input type="submit" value="마이페이지" formaction = "/mypage"/>
             </form>
             {% else %}
             <form action="/login">

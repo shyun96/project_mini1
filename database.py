@@ -91,6 +91,21 @@ def get_detail_data(id):
     except Exception as e:
         print(e)
 
+
+def create_board(title,content):
+    print("here")
+    print(title,content)
+    try:
+        with connect(**connectionString) as con:
+            cursor = con.cursor()
+            sql = f"""INSERT INTO board (image,created_time,content,views,title,user_id) VALUES("{title}","{content}")"""
+            print(cursor.execute(sql))
+            con.commit()
+            
+    except Exception as e:
+        print(e)
+
+
 def count_view(board_id):
     try:
         with connect(**connectionString) as con:

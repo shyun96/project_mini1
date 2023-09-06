@@ -1,8 +1,9 @@
 
 from pymysql import connect
+import datetime
 
 connectionString = {
-    'host': '172.20.132.169',
+    'host': '172.20.132.197',
     'port': 3306,
     'database': 'shop',
     'user': 'user1',
@@ -104,7 +105,29 @@ def create_board(title,content):
             
     except Exception as e:
         print(e)
-
+        
+def comments(user_id, comment, board):
+    try:
+        with connect(**connectionString) as con:
+            cursor = con.cursor()
+            now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') 
+            sql = """INSERT INTO reply (user_id, board_id ,content, created_time) VALUES(%s, %s, %s, %s )"""
+            cursor.execute(sql, [user_id, board, comment ,now ])
+            con.commit()
+    except Exception as e:
+        print(e)
+        
+def get_comments(board):
+    try:
+        with connect(**connectionString) as con:
+            cursor = con.cursor()
+            sql = "SELECT user_id, content, created_time FROM reply " + "where board_id = %s;"  
+            cursor.execute(sql, [board])
+            detail_data = cursor.fetchall()
+            #print(detail_data)
+        return detail_data   
+    except Exception as e:
+        print(e)
 
 def count_view(board_id):
     try:

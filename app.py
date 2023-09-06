@@ -86,7 +86,7 @@ def create_board_data():
 
 @app.route('/detail/<id>',methods = ["POST","GET"])
 def detail(id):
-    #print(333333333333333333333)
+    print(333333333333333333333)
     if request.method == "GET":
         database.count_view(id)
         detail_data = database.get_detail_data(id)
@@ -100,15 +100,25 @@ def detail(id):
             'user_id' : detail_data[6],
             'comment_cnt' : detail_data[7]
             }
-        return render_template('detail.html',data=detail_data_dic)
+        reply_data_lst = []
+        reply_data = database.get_comments(id)
+        for data in reply_data:
+            reply_data_dic = {
+                'user_id' : data[0],
+                'content' : data[1],
+                'created_time' : data[2]
+            }
+            reply_data_lst.append(reply_data_dic)
+        print(reply_data_lst)
+        return render_template('detail.html',data=detail_data_dic, reply_data = reply_data_lst)
     else :
         content = request.form['content']
         print("-----------")
         print(content)
         print("------------------")
         user_id = session['id'] # 현재 로그인한 사용자의 ID 가져오기
-        database.comments(user_id, content)
-        return redirect(url_for("detail",id=id))
+        database.comments(user_id, content, id)
+        return redirect(url_for("detail", id = id))
         #print(detail_data_dic)
 
 

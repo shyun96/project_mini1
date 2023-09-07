@@ -135,15 +135,25 @@
     </header>
     <div class = "topbar">
         {% if session.get('id') %}
-            <form>
-                <input type="submit" value="로그아웃" formaction = "/logout"/>
-                <input type="submit" value="마이페이지" formaction = "/mypage"/>
+            <form class = "logoutbtn" action = "/logout">
+                <button>로그아웃</button>
+            </form>
+            <form class = "mypagebtn" action = "/mypage">
+                <button>마이페이지</button>
+            </form>
             </form>
             {% else %}
             <form action="/login">
                 <button>
                     로그인
                 </button>
+        {%with messages = get_flashed_messages()%}
+        {%if messages %}
+        <script type="text/javascript">
+        alert("{{messages[-1]}}");
+        </script>
+        {%endif%}
+        {%endwith%}    
             </form>
         {% endif %} 
 

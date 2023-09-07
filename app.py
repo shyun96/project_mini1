@@ -78,25 +78,25 @@ def logout():
     #return id_info
 
 @app.route('/create', methods=['POST','GET'])
-def create_board_data():
+def create_board_data():   
     if request.method == 'POST':
         title = request.form['title']
         content = request.form['content']
         img_file = request.files['image']
-        #print('------------------------')
-        #print(title,content,img_file)
-        #print(img_file.filename)
-        #print('------------------------')
-        #https://stackoverflow.com/questions/58720113/flask-resfull-app-permission-error-on-file-save 참조
+       
         img_file.save(path.join(app.config['UPLOAD_FOLDER'], secure_filename(img_file.filename)))
         ImgFile = '/resources/' + img_file.filename
         img_resize.img_resize('.'+ ImgFile)
-        #ImgFile = '/resources/' + img_file.filename
+       
         database.post_board_data(session['id'],title,content,ImgFile)
         #database.post_board_data(sess,title,content,img_file.filename)
         return redirect(url_for('index'))
     else:
-        return render_template('create.html')
+        if 'id' in session:
+            return render_template('create.html')
+        else:
+            flash("로그인 정보가 없습니다. 재로그인 해주세요. ")
+            return redirect(url_for('index'))
 
 @app.route('/detail/<id>',methods = ["POST","GET"])
 def detail(id):

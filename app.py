@@ -81,10 +81,10 @@ def create_board_data():
         title = request.form['title']
         content = request.form['content']
         img_file = request.files['image']
-        print('------------------------')
-        print(title,content,img_file)
-        print(img_file.filename)
-        print('------------------------')
+        #print('------------------------')
+        #print(title,content,img_file)
+        #print(img_file.filename)
+        #print('------------------------')
         #https://stackoverflow.com/questions/58720113/flask-resfull-app-permission-error-on-file-save 참조
         img_file.save(path.join(app.config['UPLOAD_FOLDER'], secure_filename(img_file.filename)))
         ImgFile = '/resources/' + img_file.filename
@@ -98,7 +98,6 @@ def create_board_data():
 
 @app.route('/detail/<id>',methods = ["POST","GET"])
 def detail(id):
-    print(333333333333333333333)
     if request.method == "GET":
         database.count_view(id)
         detail_data = database.get_detail_data(id)
@@ -125,9 +124,9 @@ def detail(id):
         return render_template('detail.html',data=detail_data_dic, reply_data = reply_data_lst)
     else :
         content = request.form['content']
-        print("-----------")
-        print(content)
-        print("------------------")
+        #print("-----------")
+        #print(content)
+        #print("------------------")
         user_id = session['id'] # 현재 로그인한 사용자의 ID 가져오기
         database.comments(user_id, content, id)
         return redirect(url_for("detail", id = id))
@@ -157,13 +156,17 @@ def signup():
 # mypage
 @app.route('/mypage')
 def mypage():
-    # 로그인 상태 확인
     id = session.get('id')
-
-    # 사용자가 작성한 글 목록 가져오기 (제목만)
-    titles = database.get_mypage(id) 
+    return render_template('mypage.html',id=id)
     
-    return render_template('mypage.html', id=id, titles=titles)
+    
+    # # 로그인 상태 확인
+    # id = session.get('id')
+
+    # # 사용자가 작성한 글 목록 가져오기 (제목만)
+    # titles = database.get_mypage(id) 
+    
+    # return render_template('mypage.html', id=id, titles=titles)
 
 
 # edit
@@ -195,33 +198,39 @@ def edit(title):
         }
     return render_template('edit.html', data=edit_data_dic)
     
-    # else:
-    #     content = request.form['content']
-    #     print("-----------")
-    #     print(content)
-    #     print("------------------")
-    #     id = session['id']  # 현재 로그인한 사용자의 ID 가져오기
-    #     database.comments(id, content)
-    #     return redirect(url_for("edit", title=title))
+@app.route('/acnt_chng/<string:user_id>', methods = ["POST","GET"])
+def acnt_chng(user_id):
+    user_info = database.get_user_info(user_id)
+    print("-----------------")
+    print(user_info)
+    print("----------------")
+    user_info_dic = {
+        'id' :user_info[0],
+        'pwd':user_info[3],
+        'name':user_info[1],
+        'phone': user_info[2]
+    }
+    print(user_info_dic)
+    return render_template('acnt_chng.html',user_info_dic = user_info_dic)
 
+@app.route('/account', methods = ["POST","GET"])
+def account():
+    if request.method == "POST":
+        button_action = request.form['action']
+        if button_action == "account_update":
+            id = request.form['id']
+            password = request.form['password']
+            name = request.form['Name']
+            Telephone = request.form['Telephone']
+            database.update_user_info(session['id'],id)
+            session['id'] = id
+        else:
+            print("account_delete")
+            id = request.form['id']
+            database.delete_user_info(id)
+            session.clear()
+        return redirect(url_for('index'))
 
-
-
-# edit
-# @app.route('/edit_post/<user_id>/<post_title>', methods=['GET', 'POST'])
-# def edit_post(user_id, post_title):
-
-#     try:
-#         return  database.get_post(user_id, post_title) 
-    
-   
-        
-   
-#         post = database.get_post(user_id, post_title)
-#     except Exception as e:
-#         print(e)
-    
-#     return render_template('edit_post.html', post=post)
 
 if __name__ == '__main__':
     app.run(debug=True)

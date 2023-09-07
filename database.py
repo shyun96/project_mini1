@@ -173,34 +173,39 @@ def get_edit(title):
         print(e)
        
 
-
-# edit
-# def get_post(user_id, post_title):
-#     try:
-#         with mysql.connector.connect(**connectionString) as con:
-#             cursor = con.cursor()
-#             sql = "SELECT * FROM shop.board WHERE user_id = %s AND title = %s;"
+def get_user_info(user_id):
+    try:
+        with connect(**connectionString) as con:
+            cursor = con.cursor()
+            sql = f""" select * from shop.user where id = "{user_id}"; """
+            cursor.execute(sql)
+            user_info = cursor.fetchone()
+            print(user_info)
+        return user_info
         
-#             post_data = cursor.execute(sql, (user_id, post_title))
-#             post_data = cursor.fetchone()
-#             cursor.commit()
-            
+    except Exception as e:
+        print(e)
 
-#             if post_data:
-#                 post = {
-#                     'id': post_data[0],
-#                     'image': post_data[1],
-#                     'create_time': post_data[2],
-#                     'content': post_data[3],
-#                     'views': post_data[4],
-#                     'title': post_data[5],
-#                     'user_id': post_data[6],
-#                     'comment_cnt': post_data[7],
-#                 }
-#                 return post               
-#             else:
-#                 return None
-    
-#     except Exception as e:
-#         print(e)
+def update_user_info(before_user_id, after_user_id):
+    try:
+        with connect(**connectionString) as con:
+            cursor = con.cursor()
+            sql = f"""UPDATE shop.user SET id = "{after_user_id}" WHERE id = "{before_user_id}";"""
+            cursor.execute(sql)
+            con.commit()
+            
+    except Exception as e:
+        print(e)
+
+
+def delete_user_info(user_id):
+    try:
+        with connect(**connectionString) as con:
+            cursor = con.cursor()
+            sql = f""" delete from shop.user where id = "{user_id}"; """
+            cursor.execute(sql)
+            con.commit()
+            
+    except Exception as e:
+        print(e)
     

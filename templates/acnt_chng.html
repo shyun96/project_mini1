@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@700&display=swap" rel="stylesheet">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>마이페이지</title>
     <style>
         body {
             font-family: 'Nanum Gothic', sans-serif;
@@ -65,7 +65,14 @@
             text-decoration: none;
             color: inherit;
         }
-
+        .acnt {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 5px;
+            margin-left: 550px;
+            margin-right: 550px;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
@@ -73,16 +80,21 @@
         <h1>1조</h1>
     </header>
     <div class="topbar">
-        <h2>{{ id }} 님의 마이페이지</h2>
+        <h2>{{ user_info_dic.id }} 님의 마이페이지</h2>
     </div>
-    <div class="left">
-        <a href="{{ url_for('acnt_chng', user_id = id) }}" class="firstlink">
-            개인 정보 수정
-        </a>
-        <a href="#" class="secondlink">
-            게시판 수정
-        </a>
-    </div>
-
+    <form class="left" action = "/account" method="POST">
+        <div class = "acnt">
+            <input type="text" name="id" value = "{{ user_info_dic.id }}">
+            <input type="password" name="password" value = "{{ user_info_dic.pwd }}">
+            <input type="name" name="Name" value = "{{ user_info_dic.name }}">
+            <input type="telephone" name="Telephone" value="{{ user_info_dic.phone }}">
+        </div>
+        <button name="action" value="account_update" class="firstlink">
+            계정 수정
+        </button>
+        <button name="action" value="account_delete" class="secondlink">
+            계정 탈퇴
+        </button>
+    </form>
 </body>
 </html>

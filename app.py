@@ -3,6 +3,7 @@ import sys
 import database, img_resize
 from os import path
 from werkzeug.utils import secure_filename
+from urllib.parse import quote_plus
 
 app = Flask(__name__, static_folder='./resources/')
 app.secret_key = 'secretkey'
@@ -158,64 +159,52 @@ def signup():
 def mypage():
     id = session.get('id')
     return render_template('mypage.html',id=id)
-    
-    
-    # # 로그인 상태 확인
-    # id = session.get('id')
-
-    # # 사용자가 작성한 글 목록 가져오기 (제목만)
-    # titles = database.get_mypage(id) 
-    
-    # return render_template('mypage.html', id=id, titles=titles)
 
 
-# edit
-@app.route('/edit/<string:title>', methods=["POST", "GET"])
-def edit(title):
+# mypage
+@app.route('/my_board_lst')
+def my_board_lst():
+    id = session.get('id')
+    titles = database.get_my_board_lst(id) 
     
-    # if request.method == "GET":
-    #     database.count_view(title)
-    #     edit_data = database.get_edit(title)
-    #     edit_data_dic = {
-    #         'id': edit_data[0],
-    #         'create_time': edit_data[1],
-    #         'content': edit_data[2],
-           
-    #     }
-    #     return render_template('edit.html', data=edit_data_dic)
+    return render_template('my_board_lst.html', id=id, titles=titles)
     
-    request.method == "GET"
-        
-    database.count_view(title)
-    edit_data = database.get_edit(title)
-    edit_data_dic = {
+@app.route('/edit')
+def edit():
+    return render_template('my_board_edit.html')
 
-        'id': edit_data[0],
-        'create_time': edit_data[1],
-        'content': edit_data[2],
-        'title' : edit_data[3]
-        
+@app.route('/delete/<string:title>', methods = ["POST","GET"])
+def delete(title):
+    title_encoded = quote_plus(title)
+    if request.method == "GET":        
+        return render_template('delete.html', title = title_encoded)
+    elif request.method == "POST":
+        database.delete_board(title)
+        return redirect(url_for("index"))
+
+
+
+
+
+#account change
+#GET요청 : session에 저장된 user_id 정보를 불러와서 랜더링
+#POST요청 : 수정된 user_id 정보를 DB에 저장 or 계정 삭제
+@app.route('/acnt_chng', methods = ["POST","GET"])
+def acnt_chng():
+    if request.method == "GET":
+        user_info = database.get_user_info(session['id'])
+        print("-----------------")
+        print(user_info)
+        print("----------------")
+        user_info_dic = {
+            'id' :user_info[0],
+            'pwd':user_info[3],
+            'name':user_info[1],
+            'phone': user_info[2]
         }
-    return render_template('edit.html', data=edit_data_dic)
-    
-@app.route('/acnt_chng/<string:user_id>', methods = ["POST","GET"])
-def acnt_chng(user_id):
-    user_info = database.get_user_info(user_id)
-    print("-----------------")
-    print(user_info)
-    print("----------------")
-    user_info_dic = {
-        'id' :user_info[0],
-        'pwd':user_info[3],
-        'name':user_info[1],
-        'phone': user_info[2]
-    }
-    print(user_info_dic)
-    return render_template('acnt_chng.html',user_info_dic = user_info_dic)
-
-@app.route('/account', methods = ["POST","GET"])
-def account():
-    if request.method == "POST":
+        print(user_info_dic)
+        return render_template('acnt_chng.html',user_info_dic = user_info_dic)
+    else:
         button_action = request.form['action']
         if button_action == "account_update":
             id = request.form['id']
@@ -230,6 +219,7 @@ def account():
             database.delete_user_info(id)
             session.clear()
         return redirect(url_for('index'))
+        
 
 
 if __name__ == '__main__':

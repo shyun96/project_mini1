@@ -76,10 +76,10 @@
         <h2>{{ id }} 님의 마이페이지</h2>
     </div>
     <div class="left">
-        <a href="{{ url_for('acnt_chng', user_id = id) }}" class="firstlink">
+        <a href="{{ url_for('acnt_chng') }}" class="firstlink">
             개인 정보 수정
         </a>
-        <a href="#" class="secondlink">
+        <a href="{{ url_for('my_board_lst') }}" class="secondlink">
             게시판 수정
         </a>
     </div>

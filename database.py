@@ -208,4 +208,31 @@ def delete_user_info(user_id):
             
     except Exception as e:
         print(e)
+
+
+# mypage
+def get_my_board_lst(id):
+    try:
+        with connect(**connectionString) as con:
+            cursor = con.cursor()
+            sql = "SELECT title FROM shop.board WHERE user_id = %s;"
+            cursor.execute(sql, [id])
+            posts = cursor.fetchall()
+            
+            post_titles = [post[0] for post in posts]
+            
+            return post_titles
     
+    except Exception as e:
+        print(e)
+
+def delete_board(title):
+    try: 
+        with connect(**connectionString) as con:
+            cursor = con.cursor()
+            sql = "DELETE FROM shop.board WHERE title = %s;"
+            cursor.execute(sql,(title))
+            con.commit()
+    except Exception as e:
+        print(e)
+

@@ -5,6 +5,7 @@ from os import path
 from werkzeug.utils import secure_filename
 from urllib.parse import quote_plus
 
+
 app = Flask(__name__, static_folder='./resources/')
 app.secret_key = 'secretkey'
 UPLOAD_FOLDER = path.join('.', 'resources/')
@@ -161,30 +162,71 @@ def mypage():
     return render_template('mypage.html',id=id)
 
 
-# mypage
+
 @app.route('/my_board_lst')
 def my_board_lst():
     id = session.get('id')
-    titles = database.get_my_board_lst(id) 
+    bd_data= database.get_my_board_lst(id)
+    bd_data_lst = []
+    for data in bd_data:
+        bd_data_dic = {
+            'title' : data[0],
+            'board_id' : data[1]
+        }
+        bd_data_lst.append(bd_data_dic)
+    return render_template('my_board_lst.html', id=id, bd_data_lst=bd_data_lst)
     
-    return render_template('my_board_lst.html', id=id, titles=titles)
+# edit
+@app.route('/edit/<string:title>', methods=["POST", "GET"])
+def edit(title):
+    if request.method == 'POST':
+        new_title = request.form['new_title']
+        content = request.form['content']
+        
+        img_file = request.files['image']
+        
+        edit_data = database.get_edit(title)
+        database.delete_image(path.join(app.config['UPLOAD_FOLDER'], edit_data[0]))
+        
+        img_file.save(path.join(app.config['UPLOAD_FOLDER'], secure_filename(img_file.filename)))
+        ImgFile = '/resources/' + img_file.filename
+        img_resize.img_resize('.'+ ImgFile)
+        database.post_edit(ImgFile, title,content,new_title)
+  
+        return redirect(url_for('index')) 
+
     
-@app.route('/edit')
-def edit():
-    return render_template('my_board_edit.html')
+    else:
+        #print(title)
+        database.count_view(title)
+        edit_data = database.get_edit(title)
+        edit_data_dic = {
 
-@app.route('/delete/<string:title>', methods = ["POST","GET"])
-def delete(title):
-    title_encoded = quote_plus(title)
-    if request.method == "GET":        
-        return render_template('delete.html', title = title_encoded)
-    elif request.method == "POST":
-        database.delete_board(title)
-        return redirect(url_for("index"))
-
-
+            'image' : edit_data[0],
+            'content': edit_data[1],
+            'title': edit_data[2]
+       
+            }
+        return render_template('edit.html', data=edit_data_dic)
 
 
+
+@app.route('/delete_board/<board_id>', methods = ["POST","GET"])
+def delete_board(board_id):
+    #title_encoded = quote_plus(title)
+    if request.method == "GET":
+        print("delete 화면 잘뜸")
+        print(board_id)
+        return render_template('delete_board.html',board_id = board_id)
+    else:
+        btn_action = request.form['action']
+        bd_id = request.form['bd_id']
+        if btn_action == "board_delete":
+            database.delete_board(session['id'],int(bd_id))
+            return redirect(url_for("index"))
+        else:
+            return redirect(url_for("index"))
+        
 
 #account change
 #GET요청 : session에 저장된 user_id 정보를 불러와서 랜더링

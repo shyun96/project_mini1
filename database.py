@@ -1,6 +1,9 @@
 
 from pymysql import connect
 import datetime
+import shutil
+from flask import Flask
+from os import path
 
 connectionString = {
     'host': '172.20.132.197',
@@ -158,20 +161,7 @@ def get_mypage(id):
         print(e)
  
  
-# edit
-def get_edit(title):
-    try:
-        with connect(**connectionString) as con:
-            cursor = con.cursor()
-            sql = "SELECT id, created_time, content, title FROM shop.board WHERE title = %s;"
-            cursor.execute(sql, [title])
-            edit_data = cursor.fetchone()
-        
-            return edit_data
-        print(title)
-    except Exception as e:
-        print(e)
-       
+
 
 def get_user_info(user_id):
     try:
@@ -215,24 +205,56 @@ def get_my_board_lst(id):
     try:
         with connect(**connectionString) as con:
             cursor = con.cursor()
-            sql = "SELECT title FROM shop.board WHERE user_id = %s;"
+            sql = "SELECT title, id FROM shop.board WHERE user_id = %s;"
             cursor.execute(sql, [id])
             posts = cursor.fetchall()
-            
-            post_titles = [post[0] for post in posts]
-            
-            return post_titles
+            #post_titles = [post[0] for post in posts]
+        return posts
     
     except Exception as e:
         print(e)
 
-def delete_board(title):
+def delete_board(user_id, board_id):
+    print(type(user_id), type(board_id))
     try: 
         with connect(**connectionString) as con:
             cursor = con.cursor()
-            sql = "DELETE FROM shop.board WHERE title = %s;"
-            cursor.execute(sql,(title))
+            sql = "DELETE FROM shop.board WHERE id = %s AND user_id = %s;"
+            cursor.execute(sql,[board_id,user_id])
             con.commit()
     except Exception as e:
         print(e)
-
+# edit/get
+def get_edit(title):
+    try:
+        with connect(**connectionString) as con:
+            cursor = con.cursor()
+            sql = "SELECT image, content, title FROM shop.board WHERE title = %s;"
+            cursor.execute(sql, [title])
+            edit_data = cursor.fetchone()
+            print(3333333333333333)
+            print(edit_data)
+            print(333333333333333333)
+        return edit_data
+        
+    except Exception as e:
+        print(e)
+       
+# edit/post
+def post_edit(image, title, content, new_title):
+    try:
+        with connect(**connectionString) as con:
+            cursor = con.cursor()
+            sql = "UPDATE shop.board SET image = %s, title = %s, content = %s WHERE title = %s"
+            cursor.execute(sql, (image, new_title, content, title))
+            con.commit()
+    except Exception as e:
+        print(e)
+        
+# edit/image remove
+def delete_image(image_path):
+    try:
+        os.remove(image_path)
+        
+    except Exception as e:
+        print(e)

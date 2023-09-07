@@ -76,19 +76,21 @@
     <div class = "contain">
         <table class="table">
             <tr>
+                <th>번호</th>
                 <th>제목</th>
                 <th>수정</th>
                 <th>삭제</th>
             </tr>
-            {% for title in titles%}
+            {% for data in bd_data_lst%}
             <tbody>
                 <tr>
-                    <td>{{title}}</td>
+                    <td>{{data.board_id}}</td>
+                    <td>{{data.title}}</td>
                     <td>
-                        <a href="{{ url_for('edit', id=id, title=title) }}">수정</a>
+                        <a href="{{ url_for('edit', id=id, title=data.title) }}">수정</a>
                     </td>
                     <td>
-                        <a href="{{ url_for('delete', id=id,title=title) }}">삭제</a>
+                        <a href="{{ url_for('delete_board',board_id = data.board_id) }}">삭제</a>
                     </td>
                 </tr>
             </tbody>

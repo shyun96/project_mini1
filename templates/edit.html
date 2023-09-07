@@ -9,22 +9,36 @@
     <title>Document</title>
     <style>
         body {
-            display: flex;
-            align-items: center;
-            justify-content: center; /* 화면 가운데 정렬 */
-            height: 100vh; /* 뷰포트 높이 100%로 설정 */
             font-family: 'Nanum Gothic', sans-serif;
+            background-color: #f8f8f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            margin-left: 130px;
+            margin-right: 130px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 32px;
         }
 
         form {
               display : flex;
               flex-direction: column;
               width: 700px;
-              margin: 0 auto;
+              margin: 20px auto;
         }
         input {
             margin: 10px;
             width: 600px;
+            margin-top: 20px;
         }
         .title {
             padding-right: 10px;
@@ -32,15 +46,7 @@
             padding-left: 10px;
             border-radius: 10px;
         }
-        textarea {
-            padding: 10px;
-            margin: 10px;
-            height: 300px;
-            width: 600px;
-            text-align: left;
-            border-radius: 10px;
-            resize: none;
-        }
+        
         button {
             align-self: flex-end;
             margin-right: 70px;
@@ -52,18 +58,101 @@
             padding-left: 12px;
 
         }
+        
+
+        textarea {
+            padding: 10px;
+            margin: 10px;
+            height: 280px;
+            width: 300px;
+            text-align: left;
+            border-radius: 10px;
+            resize: none;
+            margin-left: auto;
+            margin-top: 30px;
+
+            margin-bottom: 20px;
+            
+        }
+        
+       
+        
+        .image-preview {
+            padding: 10px;
+            margin: 10px;
+            height: 350px;
+            width: 300px;
+            border-radius: 10px;
+            margin-right: auto;
+            margin-top: 20px;   
+            margin-bottom: 20px;
+            
+        }
+        .image-preview img {
+            max-width: 300px;
+            height: 300px;
+        }
+        .image-preview, textarea {
+            display: inline-block;
+            vertical-align: top;
+            
+        }
+
+        .content-wrapper {
+            display: flex;
+            margin-bottom: 20px;
+            margin-top: 20px
+        }
+
+        label[for="content"] {
+            padding-left: 150px; /* '내용' 라벨에만 적용되는 스타일 */
+            
+        }
+
+        .image-preview label {
+            position: relative;
+            top: -30px; /* '기존 이미지' 라벨을 위로 조절 */
+        }
+
+        input[type="text"] {
+            width: 300px; /* 또는 다른 값으로 조절 */
+            margin: 0 auto; /* 가운데 정렬을 위한 자동 마진 설정 */
+            display: block; /* 가로폭을 모두 사용하도록 블록 요소로 설정 */
+        }
+        label[for='제목'] {
+            padding-left: 210px;
+            padding-top: 10px;
+            padding-bottom: 20px;
+        }
     </style>
 
 </head>
 <body>
-    <form action="" method="post">
-        <label for = "제목">제목</label>
-        <input type="text" name = "title" id = "제목" value = "{{ data.title }}">
-        <label for = "내용">내용</label>
-        <textarea name = "content">{{ data.content }}</textarea>
-        <label for = "imageUpload">이미지 선택:</label>
+    <header>
+        <h1>1조</h1>
+    </header>
+    <form action="" method="post", enctype="multipart/form-data">
+
+        <label for="제목">제목</label>
+        <input type="text" name="new_title" id="new_title" value="{{ data.title }}">
+        <div class="content-wrapper">
+            <div class="image-preview">
+                {% if data.image %}
+                <label for="기존 이미지">기존 이미지</label>
+                <img src="{{ data.image }}" alt="이미지">
+                {% endif %}
+            </div>
+            <div>
+                <label for="내용">내용</label>
+                <textarea name="content">{{ data.content }}</textarea>
+            </div>
+        </div>
+        
+        
+        <label for="imageUpload">이미지 선택</label>
         <input type="file" name="image" id="imageupload" accept="image/*">
-        <button>수정완료</button>
+        
+        <button>수정</button>
     </form>
 </body>
 </html>

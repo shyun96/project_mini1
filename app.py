@@ -119,22 +119,34 @@ def detail(id):
             reply_data_dic = {
                 'user_id' : data[0],
                 'content' : data[1],
-                'created_time' : data[2]
+                'created_time' : data[2],
+                'reply_id' : data[3]
             }
             reply_data_lst.append(reply_data_dic)
         print(reply_data_lst)
         return render_template('detail.html',data=detail_data_dic, reply_data = reply_data_lst)
     else :
-        content = request.form['content']
-        #print("-----------")
-        #print(content)
-        #print("------------------")
-        user_id = session['id'] # 현재 로그인한 사용자의 ID 가져오기
-        database.comments(user_id, content, id)
-        return redirect(url_for("detail", id = id))
-        #print(detail_data_dic)
+        if 'id' in session:
+            content = request.form['content']
+            user_id = session['id']
+            database.comments(user_id, content, id)
+            return redirect(url_for("detail", id = id))
+        else:
+            flash("로그인을 해야 댓글 입력이 가능합니다.")
+            return redirect(url_for("detail", id = id))
+@app.route('/updatereply', methods=["GET", "POST"])     
+def updatereply():
+    if request.method == 'POST':
+        uc = request.form['updated_content']
+        ri = request.form['reply_id']
+        database.upate_reply(uc, ri)
+    return redirect(url_for('detail', id = str(request.form['board_id'])))
 
-
+@app.route('/deletereply', methods=['GET', 'POST'])
+def deletereply():
+    if request.method == 'POST':
+        database.delete_reply(request.form['reply_id'])
+    return redirect(url_for('detail', id = str(request.form['board_id'])))
 @app.route('/signup', methods = ["GET", "POST"])
 def signup():
     if request.method == 'GET':
@@ -253,7 +265,7 @@ def acnt_chng():
             password = request.form['password']
             name = request.form['Name']
             Telephone = request.form['Telephone']
-            database.update_user_info(session['id'],id)
+            database.update_user_info(session['id'],id, password, name, Telephone)
             session['id'] = id
         else:
             print("account_delete")

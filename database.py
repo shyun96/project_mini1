@@ -125,13 +125,38 @@ def get_comments(board):
     try:
         with connect(**connectionString) as con:
             cursor = con.cursor()
-            sql = "SELECT user_id, content, created_time FROM reply " + "where board_id = %s;"  
+            sql = "SELECT user_id, content, created_time , id FROM reply " + "where board_id = %s" + " ORDER BY created_time desc ;"  
             cursor.execute(sql, [board])
             detail_data = cursor.fetchall()
             #print(detail_data)
         return detail_data   
     except Exception as e:
         print(e)
+        
+def upate_reply(comment, reply_id):
+    try:
+        with connect(**connectionString) as con:
+            cursor = con.cursor()
+            now2 = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') 
+            sql = "UPDATE shop.reply SET content = %s , created_time = %s WHERE id = %s;"
+            print(comment, reply_id)
+            cursor.execute(sql, [comment, now2, reply_id])
+            con.commit()
+            
+    except Exception as e:
+        print(e)
+
+def delete_reply(reply_id):
+    try:
+        with connect(**connectionString) as con:
+            cursor = con.cursor()
+            sql = "delete from shop.reply where id = %s"
+            cursor.execute(sql, [reply_id])
+            con.commit()
+            
+    except Exception as e:
+        print(e)
+
 
 def count_view(board_id):
     try:
@@ -176,12 +201,12 @@ def get_user_info(user_id):
     except Exception as e:
         print(e)
 
-def update_user_info(before_user_id, after_user_id):
+def update_user_info(before_user_id, after_user_id, password, name, Telephone):
     try:
         with connect(**connectionString) as con:
             cursor = con.cursor()
-            sql = f"""UPDATE shop.user SET id = "{after_user_id}" WHERE id = "{before_user_id}";"""
-            cursor.execute(sql)
+            sql = "UPDATE shop.user SET id = %s, password = %s, name = %s, phone = %s WHERE id = %s"
+            cursor.execute(sql,(after_user_id, password,name, Telephone, before_user_id ))
             con.commit()
             
     except Exception as e:

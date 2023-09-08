@@ -257,9 +257,6 @@ def get_edit(title):
             sql = "SELECT image, content, title FROM shop.board WHERE title = %s;"
             cursor.execute(sql, [title])
             edit_data = cursor.fetchone()
-            print(3333333333333333)
-            print(edit_data)
-            print(333333333333333333)
         return edit_data
         
     except Exception as e:
@@ -276,10 +273,10 @@ def post_edit(image, title, content, new_title):
     except Exception as e:
         print(e)
         
-# edit/image remove
-def delete_image(image_path):
-    try:
-        os.remove(image_path)
+# # edit/image remove
+# def delete_image(image_path):
+#     try:
+#         os.remove(image_path)
         
-    except Exception as e:
-        print(e)
+#     except Exception as e:
+#         print(e)

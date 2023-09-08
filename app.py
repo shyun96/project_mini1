@@ -1,7 +1,7 @@
 from flask import Flask, render_template,request,redirect,url_for,session,flash
 import sys
 import database, img_resize
-from os import path
+from os import path, remove
 from werkzeug.utils import secure_filename
 from urllib.parse import quote_plus
 
@@ -83,12 +83,16 @@ def create_board_data():
         title = request.form['title']
         content = request.form['content']
         img_file = request.files['image']
-       
-        img_file.save(path.join(app.config['UPLOAD_FOLDER'], secure_filename(img_file.filename)))
-        ImgFile = '/resources/' + img_file.filename
-        img_resize.img_resize('.'+ ImgFile)
-       
-        database.post_board_data(session['id'],title,content,ImgFile)
+
+        if img_file.filename:
+            img_file.save(path.join(app.config['UPLOAD_FOLDER'], secure_filename(img_file.filename)))
+            ImgFile = '/resources/' + img_file.filename
+            img_resize.img_resize('.'+ ImgFile)
+            database.post_board_data(session['id'],title,content,ImgFile)
+        else:
+            ImgFile = '/resources/no_image.png'
+            img_resize.img_resize('.'+ ImgFile)
+            database.post_board_data(session['id'],title,content,ImgFile)
         #database.post_board_data(sess,title,content,img_file.filename)
         return redirect(url_for('index'))
     else:
@@ -194,23 +198,31 @@ def edit(title):
     if request.method == 'POST':
         new_title = request.form['new_title']
         content = request.form['content']
-        
         img_file = request.files['image']
         
         edit_data = database.get_edit(title)
-        database.delete_image(path.join(app.config['UPLOAD_FOLDER'], edit_data[0]))
         
-        img_file.save(path.join(app.config['UPLOAD_FOLDER'], secure_filename(img_file.filename)))
-        ImgFile = '/resources/' + img_file.filename
-        img_resize.img_resize('.'+ ImgFile)
-        database.post_edit(ImgFile, title,content,new_title)
+        # print("123123123123123123123123")
+        # print(edit_data[0][11:], img_file.filename)
+        # print("123123123123123123123123")
+        
+        if img_file.filename:
+            #print("이미지 이씀")
+            remove('.' + edit_data[0])    
+            img_file.save(path.join(app.config['UPLOAD_FOLDER'], secure_filename(img_file.filename)))
+            ImgFile = '/resources/' + img_file.filename
+            img_resize.img_resize('.'+ ImgFile)
+            database.post_edit(ImgFile, title,content,new_title)
+        else:
+            #print("이미지 없음")
+            database.post_edit(edit_data[0], title,content,new_title)
   
         return redirect(url_for('index')) 
 
     
     else:
         #print(title)
-        database.count_view(title)
+        #database.count_view(title)
         edit_data = database.get_edit(title)
         edit_data_dic = {
 

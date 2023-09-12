@@ -23,4 +23,4 @@
 |     6일차<br>(9/8)      | - 프로젝트 보고서, 발표 자료, QA하면서 오류 수정                 |
 |     7일차<br>(9/12)      | - 프로젝트 발표                             |
 
-<img src="./readme_image/메인.JPG", height="100x", width="100px">
+![img](https://github.com/shyun96/project_mini1/blob/main/readme_image/%EB%A9%94%EC%9D%B8.JPG)

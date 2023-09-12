@@ -1,9 +1,9 @@
-### :jeans: 미니 웹프로젝트 - fasion style 공유 커뮤니티:jeans:
+# :jeans: 미니 웹프로젝트 - fasion style 공유 커뮤니티:jeans:
 
 ## 목차
-  - [개요](#개요) 
+  - [개요 및 팀 소개](#개요) 
   - [진행 과정](#프로젝트-진행-과정)
-  - [게임 플레이 방식](#게임-플레이-방식)
+  - [구현 화면](#구현-페이지)
 
 ## 개요
 - 프로젝트 이름: fasion style 커뮤니티 
@@ -32,7 +32,8 @@
 | 3~5일차<br>(9/5/ ~ 9/7) | - CRUD 기능 개발                                        |
 |     6일차<br>(9/8)      | - 프로젝트 보고서, 발표 자료, QA하면서 오류 수정                 |
 |     7일차<br>(9/12)      | - 프로젝트 발표                             |
-
+## ER DIAGRAM
+<img src="https://github.com/shyun96/project_mini1/blob/main/readme_image/ER.JPG" width="500" height="300"/>
 ## 구현 페이지
 ### 메인 페이지
   ![img](https://github.com/shyun96/project_mini1/blob/main/readme_image/%EB%A9%94%EC%9D%B8.JPG)
@@ -40,5 +41,7 @@
   ![img](https://github.com/shyun96/project_mini1/blob/main/readme_image/%EB%A1%9C%EA%B7%B8%EC%9D%B8.JPG)
 ### 디테일 페이지
   ![img](https://github.com/shyun96/project_mini1/blob/main/readme_image/detail.JPG)
+
+
 
   
